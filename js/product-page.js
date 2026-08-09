@@ -30,7 +30,7 @@ function renderProductPage() {
   let activeIdx = 0;
   const variant = () => product.variants[activeIdx];
   const orderMessage = () =>
-    `Bonjour Probishirt, je souhaite commander : ${product.name} (${variant().color}) — ${product.price} FCFA.`;
+    `Bonjour Probishirt, je souhaite commander : ${product.name} (${variant().color}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
 
   mount.innerHTML = `
     <nav class="breadcrumb" aria-label="Fil d'Ariane">
