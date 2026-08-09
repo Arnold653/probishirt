@@ -1,4 +1,6 @@
-const products = require("../products-data.json");
+const fs = require("fs");
+const path = require("path");
+const fallbackProducts = require("../products-data.json");
 
 function escapeHtml(str) {
   return String(str)
@@ -8,8 +10,85 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
-module.exports = (req, res) => {
+function parseCSV(text) {
+  const rows = [];
+  let row = [];
+  let field = "";
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else inQuotes = false;
+      } else {
+        field += c;
+      }
+    } else if (c === '"') {
+      inQuotes = true;
+    } else if (c === ",") {
+      row.push(field); field = "";
+    } else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(field); field = "";
+      if (row.some((v) => v !== "")) rows.push(row);
+      row = [];
+    } else {
+      field += c;
+    }
+  }
+  if (field !== "" || row.length) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+function rowsToProducts(rows) {
+  if (!rows.length) return [];
+  const header = rows[0].map((h) => h.trim().toLowerCase());
+  const idx = Object.fromEntries(header.map((h, i) => [h, i]));
+  const byId = {};
+  const order = [];
+  for (let r = 1; r < rows.length; r++) {
+    const row = rows[r];
+    const id = (row[idx.id] || "").trim();
+    if (!id) continue;
+    if (!byId[id]) {
+      byId[id] = {
+        id,
+        name: (row[idx.name] || "").trim(),
+        quote: (row[idx.quote] || "").trim(),
+        price: (row[idx.price] || "").trim(),
+        img: ""
+      };
+      order.push(id);
+    }
+    const img = (row[idx.image_url] || "").trim();
+    if (img && !byId[id].img) byId[id].img = img;
+  }
+  return order.map((id) => byId[id]).filter((p) => p.img);
+}
+
+async function getProducts() {
+  try {
+    const cfgPath = path.join(__dirname, "..", "..", "sheet-config.json");
+    const cfg = JSON.parse(fs.readFileSync(cfgPath, "utf8"));
+    if (cfg.csvUrl) {
+      const sep = cfg.csvUrl.includes("?") ? "&" : "?";
+      const resp = await fetch(`${cfg.csvUrl}${sep}t=${Date.now()}`);
+      if (resp.ok) {
+        const text = await resp.text();
+        const products = rowsToProducts(parseCSV(text));
+        if (products.length) return products;
+      }
+    }
+  } catch (e) {
+    console.warn("Sheet indisponible côté serveur, fallback utilisé.", e);
+  }
+  return fallbackProducts;
+}
+
+module.exports = async (req, res) => {
   const { id } = req.query;
+  const products = await getProducts();
   const product = products.find((p) => p.id === id);
 
   const proto = req.headers["x-forwarded-proto"] || "https";
