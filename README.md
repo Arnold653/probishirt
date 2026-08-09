@@ -63,11 +63,13 @@ Vercel redéploie automatiquement en quelques secondes.
 
 ## Aperçu WhatsApp (comme une pub Facebook)
 
-Le bouton "Commander" ajoute désormais un lien vers
+Le bouton "Commander" ajoute un lien vers
 `/api/produit/<id-du-produit>` dans le message WhatsApp pré-rempli.
 Cette page (générée automatiquement, dossier `api/`) contient les
 balises Open Graph nécessaires pour que WhatsApp affiche l'image du
-produit en aperçu — exactement comme un lien de pub Facebook.
+produit en aperçu — exactement comme un lien de pub Facebook. Le lien
+reste visible en bas du message : c'est inévitable, WhatsApp ne peut
+pas générer l'aperçu autrement.
 
 ⚠️ Ça ne fonctionne qu'une fois le site déployé sur un vrai domaine
 (Vercel ou ton nom de domaine) — WhatsApp ne peut pas récupérer
@@ -75,8 +77,6 @@ l'aperçu sur `localhost`. Le fichier `api/products-data.json` doit
 rester synchronisé avec `js/products.js` (mêmes id, mêmes images) —
 si tu ajoutes un produit dans `js/products.js`, ajoute la même entrée
 (id, name, quote, price, img) dans `api/products-data.json`.
-
-
 
 ```
 index.html            → Accueil (hero + sélection de 3 produits)
