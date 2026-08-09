@@ -76,6 +76,7 @@ function renderCard(product) {
 function renderCatalog(targetId, list) {
   const grid = document.getElementById(targetId);
   if (!grid) return;
+  grid.innerHTML = "";
   (list || PRODUCTS).forEach((p) => grid.appendChild(renderCard(p)));
 }
 
@@ -120,12 +121,14 @@ function wireMobileMenu() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  renderCatalog("catalog-grid");
-  renderCatalog("featured-grid", PRODUCTS.slice(0, 3));
-  wireGlobalWhatsApp();
-  setYear();
-  highlightActiveNav();
   wireMobileMenu();
+  window.productsReadyPromise.then(() => {
+    renderCatalog("catalog-grid");
+    renderCatalog("featured-grid", PRODUCTS.slice(0, 3));
+    wireGlobalWhatsApp();
+    setYear();
+    highlightActiveNav();
+  });
 });
 
 registerServiceWorker();

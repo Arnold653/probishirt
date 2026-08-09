@@ -1,15 +1,18 @@
 /* =========================================================
    CONFIGURATION PROBISHIRT
    Fichier partagé par toutes les pages du site.
-   Modifie uniquement les valeurs ci-dessous — pas besoin de
-   toucher au reste du code.
+   Sert de PRODUITS PAR DÉFAUT : si un Google Sheet est configuré
+   (voir sheet-config.json), ses données remplacent celles-ci
+   automatiquement au chargement. Si le Sheet est vide ou
+   inaccessible, cette liste reste utilisée — le site ne casse
+   jamais.
    ========================================================= */
 
 // Numéro WhatsApp au format international, sans "+", sans espaces.
 const WHATSAPP_NUMBER = "2290199261741";
 
 // Les prix ci-dessous sont des exemples à ajuster si besoin.
-const PRODUCTS = [
+var PRODUCTS = [
   {
     id: "sagesse-divine",
     name: "Sagesse Divine Illimitée",

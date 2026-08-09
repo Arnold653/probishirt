@@ -117,4 +117,6 @@ function renderProductPage() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", renderProductPage);
+document.addEventListener("DOMContentLoaded", () => {
+  window.productsReadyPromise.then(renderProductPage);
+});
