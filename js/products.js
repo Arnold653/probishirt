@@ -30,19 +30,22 @@ const PRODUCTS = [
     price: "15 000",
     variants: [
       { color: "Bleu roi", hex: "#1447c4", img: "assets/products/kd-kingdom-blue.jpg" },
-      { color: "Blanc", hex: "#f4f5f7", img: "assets/products/kd-kingdom-white.jpg" }
+      { color: "Blanc", hex: "#f4f5f7", img: "assets/products/kd-kingdom-white.jpg" },
+      { color: "Noir", hex: "#0b0b0d", img: "assets/products/kd-kingdom-black.jpg" },
+      { color: "Bleu marine chiné", hex: "#2b3252", img: "assets/products/kd-kingdom-navy.jpg" },
+      { color: "Bleu ciel chiné", hex: "#7c93e0", img: "assets/products/kd-kingdom-lightblue.jpg" }
     ]
   },
   {
     id: "guard-your-heart",
-    name: "Guard Your Heart",
+    name: "Garde Ton Cœur",
     quote: "Un rappel porté près du cœur, chaque jour.",
     description:
-      "Une déclaration simple et directe, à porter comme une garde quotidienne. Disponible en noir profond ou bleu intense, pour un usage aussi bien casual qu'habillé.",
+      "Une déclaration simple et directe, à porter comme une garde quotidienne. Disponible en noir profond ou bleu royal, pour un usage aussi bien casual qu'habillé.",
     price: "15 000",
     variants: [
-      { color: "Noir", hex: "#0b0b0d", img: "assets/products/guard-heart-black.jpg" },
-      { color: "Bleu profond", hex: "#3a3fb0", img: "assets/products/guard-heart-blue.jpg" }
+      { color: "Noir", hex: "#0b0b0d", img: "assets/products/garde-coeur-black.jpg" },
+      { color: "Bleu royal", hex: "#2b4fd6", img: "assets/products/garde-coeur-blue.jpg" }
     ]
   },
   {
@@ -65,7 +68,42 @@ const PRODUCTS = [
       "Une pièce sobre au message profond, pour ceux qui savent que la vraie intelligence traverse le temps. Blanc, coupe unisexe, tissu premium.",
     price: "15 000",
     variants: [
-      { color: "Blanc", hex: "#f4f5f7", img: "assets/products/intelligence-siecles-white.jpg" }
+      { color: "Blanc", hex: "#f4f5f7", img: "assets/products/intelligence-siecles-white.jpg" },
+      { color: "Jaune", hex: "#eecf3d", img: "assets/products/intelligence-siecles-yellow.jpg" }
+    ]
+  },
+  {
+    id: "diligence-wins",
+    name: "Diligence Wins",
+    quote: "« La diligence gagne. »",
+    description:
+      "Un design graffiti énergique pour rappeler que le travail assidu paie toujours. Impression éclaboussée, coupe unisexe, coton épais.",
+    price: "15 000",
+    variants: [
+      { color: "Blanc", hex: "#f4f5f7", img: "assets/products/diligence-wins-white.jpg" },
+      { color: "Jaune", hex: "#eecf3d", img: "assets/products/diligence-wins-yellow.jpg" }
+    ]
+  },
+  {
+    id: "lumiere-eternelle",
+    name: "Lumière Éternelle",
+    quote: "« Ce n'est pas une pensée humaine, c'est une lumière éternelle. »",
+    description:
+      "Une pièce élégante à la coupe féminine, pour rappeler que certaines pensées dépassent l'entendement humain. Noir profond, finitions soignées.",
+    price: "15 000",
+    variants: [
+      { color: "Noir", hex: "#0b0b0d", img: "assets/products/lumiere-eternelle-black.jpg" }
+    ]
+  },
+  {
+    id: "esprit-tres-haut",
+    name: "L'Esprit du Très-Haut",
+    quote: "« En moi respire l'esprit du Très-Haut, intelligence au-delà des royaumes. »",
+    description:
+      "Une déclaration d'identité spirituelle sobre et directe, pour ceux qui savent d'où vient leur discernement. Noir profond, coupe unisexe.",
+    price: "15 000",
+    variants: [
+      { color: "Noir", hex: "#0b0b0d", img: "assets/products/esprit-tres-haut-black.jpg" }
     ]
   },
   {
