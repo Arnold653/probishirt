@@ -1,0 +1,65 @@
+[
+  {
+    "id": "sagesse-divine",
+    "name": "Sagesse Divine Illimitée",
+    "quote": "« Savoir des hommes limité, mais sagesse divine illimitée. »",
+    "price": "15 000",
+    "img": "assets/products/sagesse-divine-black.jpg"
+  },
+  {
+    "id": "kd-kingdom",
+    "name": "KD Kingdom",
+    "quote": "L'emblème couronné de ceux qui règnent en esprit.",
+    "price": "15 000",
+    "img": "assets/products/kd-kingdom-blue.jpg"
+  },
+  {
+    "id": "guard-your-heart",
+    "name": "Garde Ton Cœur",
+    "quote": "Un rappel porté près du cœur, chaque jour.",
+    "price": "15 000",
+    "img": "assets/products/garde-coeur-black.jpg"
+  },
+  {
+    "id": "esprit-songes",
+    "name": "L'Esprit des Songes",
+    "quote": "« L'esprit qui interprète les songes vit en moi. »",
+    "price": "15 000",
+    "img": "assets/products/esprit-songes-white.jpg"
+  },
+  {
+    "id": "intelligence-siecles",
+    "name": "Intelligence des Siècles",
+    "quote": "« Habité par une intelligence qui dépasse les siècles. »",
+    "price": "15 000",
+    "img": "assets/products/intelligence-siecles-white.jpg"
+  },
+  {
+    "id": "diligence-wins",
+    "name": "Diligence Wins",
+    "quote": "« La diligence gagne. »",
+    "price": "15 000",
+    "img": "assets/products/diligence-wins-white.jpg"
+  },
+  {
+    "id": "lumiere-eternelle",
+    "name": "Lumière Éternelle",
+    "quote": "« Ce n'est pas une pensée humaine, c'est une lumière éternelle. »",
+    "price": "15 000",
+    "img": "assets/products/lumiere-eternelle-black.jpg"
+  },
+  {
+    "id": "esprit-tres-haut",
+    "name": "L'Esprit du Très-Haut",
+    "quote": "« En moi respire l'esprit du Très-Haut, intelligence au-delà des royaumes. »",
+    "price": "15 000",
+    "img": "assets/products/esprit-tres-haut-black.jpg"
+  },
+  {
+    "id": "sagesse-haut",
+    "name": "Sagesse d'en Haut",
+    "quote": "« Une sagesse qui ne vient pas d'ici, mais d'en haut. »",
+    "price": "18 000",
+    "img": "assets/products/sagesse-haut-black.jpg"
+  }
+]
