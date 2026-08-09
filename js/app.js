@@ -11,6 +11,10 @@ function waIconSVG() {
   return `<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16.001 3C9.1 3 3.5 8.6 3.5 15.5c0 2.3.6 4.5 1.8 6.4L3 29l7.3-2.2c1.8 1 3.9 1.5 6 1.5h.1c6.9 0 12.5-5.6 12.5-12.5S22.9 3 16.001 3zm0 22.7h-.1c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-4.3 1.3 1.3-4.2-.2-.4c-1.1-1.7-1.6-3.6-1.6-5.6 0-5.7 4.6-10.3 10.3-10.3 2.8 0 5.3 1.1 7.3 3s3 4.5 3 7.3c0 5.7-4.7 10.6-10.3 10.6zm5.6-7.8c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6-.1-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.1.2 2.1 3.2 5.1 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>`;
 }
 
+function shareUrl(productId) {
+  return `${location.origin}/api/produit/${encodeURIComponent(productId)}`;
+}
+
 function buildSwatches(product, activeIndex) {
   if (product.variants.length < 2) return "";
   return `<div class="swatches" role="group" aria-label="Choisir un coloris">
@@ -28,7 +32,7 @@ function renderCard(product) {
   el.dataset.active = "0";
 
   const variant = product.variants[0];
-  const orderMsg = `Bonjour Probishirt, je souhaite commander : ${product.name} (${variant.color}) — ${product.price} FCFA.`;
+  const orderMsg = `Bonjour Probishirt, je souhaite commander : ${product.name} (${variant.color}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
 
   el.innerHTML = `
     <a class="card-media" href="produit.html?id=${product.id}" aria-label="Voir ${product.name}">
@@ -61,7 +65,7 @@ function renderCard(product) {
       img.alt = `${product.name} — coloris ${v.color}`;
       swatchButtons.forEach((b) => b.setAttribute("aria-pressed", "false"));
       btn.setAttribute("aria-pressed", "true");
-      const msg = `Bonjour Probishirt, je souhaite commander : ${product.name} (${v.color}) — ${product.price} FCFA.`;
+      const msg = `Bonjour Probishirt, je souhaite commander : ${product.name} (${v.color}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
       orderBtn.href = waLink(msg);
     });
   });
