@@ -563,7 +563,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
 .breadcrumb span[aria-current] { color: var(--text); font-weight: 600; }
 
 /* ---------------- Fiche produit ---------------- */
-.product-page { padding: 56px 0 100px; }
+.product-page { padding-top: 56px; padding-bottom: 100px; }
 .product-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
