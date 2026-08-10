@@ -29,8 +29,10 @@ function renderProductPage() {
 
   let activeIdx = 0;
   const variant = () => product.variants[activeIdx];
+  const sizes = productSizes(product);
+  let activeSize = sizes.includes("M") ? "M" : sizes[0];
   const orderMessage = () =>
-    `Bonjour Probishirt, je souhaite commander : ${product.name} (${variant().color}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
+    `Bonjour Probishirt, je souhaite commander : ${product.name} (${variant().color}, taille ${activeSize}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
 
   mount.innerHTML = `
     <nav class="breadcrumb" aria-label="Fil d'Ariane">
@@ -43,12 +45,17 @@ function renderProductPage() {
     <div class="product-layout">
       <div class="product-media">
         <span class="tag-premium">Édition premium</span>
+        ${buildBadge(product)}
         <img id="pd-img" src="${variant().img}" alt="${product.name} — coloris ${variant().color}" width="1000" height="1000">
       </div>
       <div class="product-info">
         <h1>${product.name}</h1>
         <p class="quote">${product.quote}</p>
         <div id="pd-swatches"></div>
+        <div class="size-row">
+          <label for="pd-size">Taille</label>
+          ${buildSizeSelect(product, "-detail")}
+        </div>
         <div class="product-price">${product.price} <small>FCFA</small></div>
         <a id="pd-order" class="btn btn-primary btn-lg" href="${waLink(orderMessage())}" target="_blank" rel="noopener">
           ${waIconSVG()} Commander sur WhatsApp
@@ -65,7 +72,7 @@ function renderProductPage() {
             <ul class="product-facts">
               <li>Coton premium, coupe unisexe</li>
               <li>Impression durable, résistante au lavage</li>
-              <li>Tailles disponibles : S à XXL</li>
+              <li>Tailles disponibles : ${sizes.join(", ")}</li>
               <li>Édition limitée, produite en petites séries</li>
             </ul>
           </section>
@@ -82,6 +89,15 @@ function renderProductPage() {
       </div>
     </div>
   `;
+
+  const sizeSelect = mount.querySelector(`#size-${product.id}-detail`);
+  if (sizeSelect) {
+    sizeSelect.id = "pd-size";
+    sizeSelect.addEventListener("change", () => {
+      activeSize = sizeSelect.value;
+      mount.querySelector("#pd-order").href = waLink(orderMessage());
+    });
+  }
 
   function renderSwatches() {
     const holder = mount.querySelector("#pd-swatches");

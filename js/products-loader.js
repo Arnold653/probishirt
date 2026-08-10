@@ -65,6 +65,11 @@ function rowsToProducts(rows) {
         quote: (row[idx.quote] || "").trim(),
         description: (row[idx.description] || "").trim(),
         price: (row[idx.price] || "").trim(),
+        badge: (row[idx.badge] || "").trim(),
+        sizes: (row[idx.sizes] || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
         variants: []
       };
       order.push(id);

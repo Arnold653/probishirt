@@ -11,7 +11,20 @@
 // Numéro WhatsApp au format international, sans "+", sans espaces.
 const WHATSAPP_NUMBER = "2290199261741";
 
+// Réseaux sociaux — laisse la valeur vide ("") pour qu'une icône
+// n'apparaisse pas dans le footer si tu n'as pas encore ce compte.
+var SOCIAL_LINKS = {
+  instagram: "",
+  facebook: "",
+  tiktok: ""
+};
+
+// Tailles proposées par défaut pour tous les produits (modifiable
+// produit par produit avec le champ "sizes").
+var DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
+
 // Les prix ci-dessous sont des exemples à ajuster si besoin.
+// "badge" est facultatif : "nouveau", "bestseller", ou omis.
 var PRODUCTS = [
   {
     id: "sagesse-divine",
@@ -20,6 +33,7 @@ var PRODUCTS = [
     description:
       "Un rappel porté au quotidien : la connaissance humaine a des limites, la sagesse qui vient d'en haut n'en a pas. Coupe unisexe, coton épais, impression qui résiste au lavage.",
     price: "15 000",
+    badge: "bestseller",
     variants: [
       { color: "Noir", hex: "#0b0b0d", img: "assets/products/sagesse-divine-black.jpg" }
     ]
@@ -82,6 +96,7 @@ var PRODUCTS = [
     description:
       "Un design graffiti énergique pour rappeler que le travail assidu paie toujours. Impression éclaboussée, coupe unisexe, coton épais.",
     price: "15 000",
+    badge: "nouveau",
     variants: [
       { color: "Blanc", hex: "#f4f5f7", img: "assets/products/diligence-wins-white.jpg" },
       { color: "Jaune", hex: "#eecf3d", img: "assets/products/diligence-wins-yellow.jpg" }
@@ -94,6 +109,7 @@ var PRODUCTS = [
     description:
       "Une pièce élégante à la coupe féminine, pour rappeler que certaines pensées dépassent l'entendement humain. Noir profond, finitions soignées.",
     price: "15 000",
+    badge: "nouveau",
     variants: [
       { color: "Noir", hex: "#0b0b0d", img: "assets/products/lumiere-eternelle-black.jpg" }
     ]
@@ -105,6 +121,7 @@ var PRODUCTS = [
     description:
       "Une déclaration d'identité spirituelle sobre et directe, pour ceux qui savent d'où vient leur discernement. Noir profond, coupe unisexe.",
     price: "15 000",
+    badge: "nouveau",
     variants: [
       { color: "Noir", hex: "#0b0b0d", img: "assets/products/esprit-tres-haut-black.jpg" }
     ]

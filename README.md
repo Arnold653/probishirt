@@ -24,6 +24,36 @@ Un seul fichier à modifier pour rendre le site opérationnel : **`js/products.j
 3. **Tes textes produits**
    `name` et `quote` sont modifiables librement dans ce même tableau.
 
+4. **Tes réseaux sociaux** (facultatif)
+   ```js
+   var SOCIAL_LINKS = {
+     instagram: "https://instagram.com/tonpseudo",
+     facebook: "",
+     tiktok: ""
+   };
+   ```
+   Laisse une valeur vide ("") pour que l'icône n'apparaisse pas dans le
+   footer si tu n'as pas encore ce compte.
+
+## Google Sheet (ajouter des produits sans toucher au code)
+
+Une fois `sheet-config.json` rempli avec le lien CSV de ton Google
+Sheet, le site (et le message WhatsApp) lit les produits depuis ce
+Sheet à chaque visite — `js/products.js` ne sert alors que de secours
+si le Sheet est vide ou injoignable.
+
+Colonnes attendues sur la première ligne du Sheet, une ligne par
+coloris (même `id` répété pour un produit à plusieurs coloris) :
+
+```
+id | name | quote | description | price | color | hex | image_url | badge | sizes
+```
+
+- `badge` (facultatif) : `nouveau`, `bestseller`, ou laisser vide
+- `sizes` (facultatif) : tailles séparées par des virgules, ex.
+  `S,M,L,XL` — laisser vide pour utiliser les tailles par défaut
+  (S, M, L, XL, XXL)
+
 ## Déployer sur GitHub + Vercel
 
 **1. Créer le dépôt GitHub**

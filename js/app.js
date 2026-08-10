@@ -26,26 +26,57 @@ function buildSwatches(product, activeIndex) {
   </div>`;
 }
 
+function productSizes(product) {
+  return product.sizes && product.sizes.length ? product.sizes : DEFAULT_SIZES;
+}
+
+function buildSizeSelect(product, idSuffix) {
+  const sizes = productSizes(product);
+  const defaultSize = sizes.includes("M") ? "M" : sizes[0];
+  return `<select class="size-select" id="size-${product.id}${idSuffix}" aria-label="Choisir une taille">
+    ${sizes.map((s) => `<option value="${s}" ${s === defaultSize ? "selected" : ""}>${s}</option>`).join("")}
+  </select>`;
+}
+
+function badgeLabel(badge) {
+  if (badge === "nouveau") return "Nouveau";
+  if (badge === "bestseller") return "Meilleure vente";
+  return "";
+}
+
+function buildBadge(product) {
+  const label = badgeLabel(product.badge);
+  if (!label) return "";
+  return `<span class="tag-badge tag-badge--${product.badge}">${label}</span>`;
+}
+
 function renderCard(product) {
   const el = document.createElement("article");
   el.className = "card";
   el.dataset.active = "0";
 
   const variant = product.variants[0];
-  const orderMsg = `Bonjour Probishirt, je souhaite commander : ${product.name} (${variant.color}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
+  const defaultSize = productSizes(product).includes("M") ? "M" : productSizes(product)[0];
+  const orderMsg = (color, size) =>
+    `Bonjour Probishirt, je souhaite commander : ${product.name} (${color}, taille ${size}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
 
   el.innerHTML = `
     <a class="card-media" href="produit.html?id=${product.id}" aria-label="Voir ${product.name}">
       <span class="tag-premium">Édition premium</span>
+      ${buildBadge(product)}
       <img src="${variant.img}" alt="${product.name} — coloris ${variant.color}" loading="lazy" width="1000" height="1000">
     </a>
     <div class="card-body">
       <h3><a href="produit.html?id=${product.id}">${product.name}</a></h3>
       <p class="quote">${product.quote}</p>
       ${buildSwatches(product, 0)}
+      <div class="card-size-row">
+        <label for="size-${product.id}-card">Taille</label>
+        ${buildSizeSelect(product, "-card")}
+      </div>
       <div class="card-foot">
         <div class="price">${product.price} <small>FCFA</small></div>
-        <a class="order-btn" href="${waLink(orderMsg)}" target="_blank" rel="noopener">
+        <a class="order-btn" href="${waLink(orderMsg(variant.color, defaultSize))}" target="_blank" rel="noopener">
           ${waIconSVG()} Commander
         </a>
       </div>
@@ -53,8 +84,14 @@ function renderCard(product) {
   `;
 
   const swatchButtons = el.querySelectorAll(".swatch");
+  const sizeSelect = el.querySelector(".size-select");
   const img = el.querySelector("img");
   const orderBtn = el.querySelector(".order-btn");
+  let activeColor = variant.color;
+
+  function refreshOrderLink() {
+    orderBtn.href = waLink(orderMsg(activeColor, sizeSelect.value));
+  }
 
   swatchButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -65,10 +102,12 @@ function renderCard(product) {
       img.alt = `${product.name} — coloris ${v.color}`;
       swatchButtons.forEach((b) => b.setAttribute("aria-pressed", "false"));
       btn.setAttribute("aria-pressed", "true");
-      const msg = `Bonjour Probishirt, je souhaite commander : ${product.name} (${v.color}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
-      orderBtn.href = waLink(msg);
+      activeColor = v.color;
+      refreshOrderLink();
     });
   });
+
+  sizeSelect.addEventListener("change", refreshOrderLink);
 
   return el;
 }
@@ -78,6 +117,34 @@ function renderCatalog(targetId, list) {
   if (!grid) return;
   grid.innerHTML = "";
   (list || PRODUCTS).forEach((p) => grid.appendChild(renderCard(p)));
+}
+
+function socialIconSVG(name) {
+  const icons = {
+    instagram:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>',
+    facebook:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.8h2.6l.4-3h-3v-1.9c0-.9.2-1.5 1.5-1.5h1.6V4.1C15.9 4 15 4 14 4c-2.4 0-4 1.5-4 4.1v2.1H7.4v3H10V21h3.5z"/></svg>',
+    tiktok:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3c.4 2.1 1.7 3.5 3.9 3.7v2.8c-1.4 0-2.7-.4-3.9-1.2v6.6c0 3.3-2.4 5.6-5.5 5.6-3 0-5.5-2.4-5.5-5.6 0-3.1 2.4-5.5 5.5-5.5.3 0 .6 0 .9.1v2.9a2.7 2.7 0 0 0-.9-.2 2.7 2.7 0 1 0 2.6 2.7V3h2.9z"/></svg>'
+  };
+  return icons[name] || "";
+}
+
+function wireSocialLinks() {
+  document.querySelectorAll(".social-links").forEach((container) => {
+    const entries = Object.entries(SOCIAL_LINKS || {}).filter(([, url]) => url);
+    if (!entries.length) {
+      container.hidden = true;
+      return;
+    }
+    container.innerHTML = entries
+      .map(
+        ([name, url]) =>
+          `<a href="${url}" target="_blank" rel="noopener" aria-label="${name}">${socialIconSVG(name)}</a>`
+      )
+      .join("");
+  });
 }
 
 function wireGlobalWhatsApp() {
@@ -122,6 +189,7 @@ function wireMobileMenu() {
 
 document.addEventListener("DOMContentLoaded", () => {
   wireMobileMenu();
+  wireSocialLinks();
   window.productsReadyPromise.then(() => {
     renderCatalog("catalog-grid");
     renderCatalog("featured-grid", PRODUCTS.slice(0, 3));
