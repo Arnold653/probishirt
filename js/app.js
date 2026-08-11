@@ -15,12 +15,20 @@ function shareUrl(productId) {
   return `${location.origin}/api/produit/${encodeURIComponent(productId)}`;
 }
 
+function isInStock(variant) {
+  return variant.inStock !== false;
+}
+
+function firstInStockVariant(product) {
+  return product.variants.find(isInStock) || product.variants[0];
+}
+
 function buildSwatches(product, activeIndex) {
   if (product.variants.length < 2) return "";
   return `<div class="swatches" role="group" aria-label="Choisir un coloris">
     ${product.variants
       .map(
-        (v, i) => `<button type="button" class="swatch" data-idx="${i}" style="background:${v.hex}" aria-pressed="${i === activeIndex}" aria-label="${v.color}"></button>`
+        (v, i) => `<button type="button" class="swatch${isInStock(v) ? "" : " swatch--out"}" data-idx="${i}" style="background:${v.hex}" aria-pressed="${i === activeIndex}" aria-label="${v.color}${isInStock(v) ? "" : " (épuisé)"}" ${isInStock(v) ? "" : "disabled"}></button>`
       )
       .join("")}
   </div>`;
@@ -55,26 +63,28 @@ function renderCard(product) {
   el.className = "card";
   el.dataset.active = "0";
 
-  const variant = product.variants[0];
+  const initialVariant = firstInStockVariant(product);
+  const initialIdx = product.variants.indexOf(initialVariant);
+  const allSoldOut = !product.variants.some(isInStock);
 
   el.innerHTML = `
     <a class="card-media" href="produit.html?id=${product.id}" aria-label="Voir ${product.name}">
       <span class="tag-premium">Édition premium</span>
-      ${buildBadge(product)}
-      <img src="${variant.img}" alt="${product.name} — coloris ${variant.color}" loading="lazy" width="1000" height="1000">
+      ${allSoldOut ? '<span class="tag-badge tag-badge--soldout">Épuisé</span>' : buildBadge(product)}
+      <img src="${initialVariant.img}" alt="${product.name} — coloris ${initialVariant.color}" loading="lazy" width="1000" height="1000">
     </a>
     <div class="card-body">
       <h3><a href="produit.html?id=${product.id}">${product.name}</a></h3>
       <p class="quote">${product.quote}</p>
-      ${buildSwatches(product, 0)}
+      ${buildSwatches(product, initialIdx)}
       <div class="card-size-row">
         <label for="size-${product.id}-card">Taille</label>
         ${buildSizeSelect(product, "-card")}
       </div>
       <div class="card-foot">
         <div class="price">${product.price} <small>FCFA</small></div>
-        <button type="button" class="order-btn add-to-cart-btn">
-          ${cartIconSVG()} Ajouter
+        <button type="button" class="order-btn add-to-cart-btn" ${allSoldOut ? "disabled" : ""}>
+          ${allSoldOut ? "Épuisé" : `${cartIconSVG()} Ajouter`}
         </button>
       </div>
     </div>
@@ -84,14 +94,15 @@ function renderCard(product) {
   const sizeSelect = el.querySelector(".size-select");
   const img = el.querySelector("img");
   const addBtn = el.querySelector(".add-to-cart-btn");
-  let activeColor = variant.color;
-  let activeImg = variant.img;
+  let activeColor = initialVariant.color;
+  let activeImg = initialVariant.img;
 
   swatchButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       const idx = Number(btn.dataset.idx);
       const v = product.variants[idx];
+      if (!isInStock(v)) return;
       img.src = v.img;
       img.alt = `${product.name} — coloris ${v.color}`;
       swatchButtons.forEach((b) => b.setAttribute("aria-pressed", "false"));
@@ -102,6 +113,7 @@ function renderCard(product) {
   });
 
   addBtn.addEventListener("click", () => {
+    if (addBtn.disabled) return;
     addToCart({
       id: product.id,
       name: product.name,

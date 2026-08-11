@@ -46,13 +46,16 @@ Colonnes attendues sur la première ligne du Sheet, une ligne par
 coloris (même `id` répété pour un produit à plusieurs coloris) :
 
 ```
-id | name | quote | description | price | color | hex | image_url | badge | sizes
+id | name | quote | description | price | color | hex | image_url | badge | sizes | in_stock
 ```
 
 - `badge` (facultatif) : `nouveau`, `bestseller`, ou laisser vide
 - `sizes` (facultatif) : tailles séparées par des virgules, ex.
   `S,M,L,XL` — laisser vide pour utiliser les tailles par défaut
   (S, M, L, XL, XXL)
+- `in_stock` (facultatif) : mets `non` pour ce coloris précis s'il est
+  en rupture de stock — le coloris apparaît alors barré et non
+  sélectionnable. Laisser vide ou mettre `oui` = en stock.
 
 ## Déployer sur GitHub + Vercel
 

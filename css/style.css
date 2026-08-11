@@ -439,6 +439,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
 }
 .tag-badge--nouveau { background: var(--blue-bright); }
 .tag-badge--bestseller { background: #c99a2e; }
+.tag-badge--soldout { background: #5a5f68; }
 .card-body { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
 .card-body h3 { font-size: 19px; line-height: 1.3; }
 .card-body .quote {
@@ -457,6 +458,19 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
   padding: 0;
 }
 .swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--blue-bright); }
+.swatch--out {
+  cursor: not-allowed;
+  opacity: 0.35;
+  position: relative;
+}
+.swatch--out::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(to top right, transparent 46%, currentColor 48%, currentColor 52%, transparent 54%);
+  color: #8a8f98;
+  border-radius: 50%;
+}
 
 .size-select {
   border: 1px solid var(--line);
@@ -506,6 +520,14 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
 .order-btn:hover { background: var(--blue-deep); }
 .order-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 .order-btn.is-added { background: #1c8a4d; }
+.order-btn:disabled,
+.btn:disabled {
+  background: #c7cad0;
+  color: #6b6f78;
+  cursor: not-allowed;
+}
+.order-btn:disabled:hover,
+.btn:disabled:hover { background: #c7cad0; }
 
 /* ---------------- Page Panier ---------------- */
 .cart-section { padding: 48px 0 100px; }
@@ -736,6 +758,28 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
   border: 1px solid var(--line);
 }
 .product-media img { width: 100%; height: 100%; object-fit: cover; }
+.product-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+.share-btn {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  cursor: pointer;
+}
+.share-btn svg { width: 18px; height: 18px; }
+.share-btn:hover { color: var(--blue); border-color: var(--blue); }
+.share-btn.is-copied { color: #1c8a4d; border-color: #1c8a4d; font-weight: 700; }
 .product-info h1 {
   font-size: clamp(28px, 3.6vw, 38px);
   line-height: 1.12;

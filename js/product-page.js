@@ -27,11 +27,13 @@ function renderProductPage() {
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) metaDesc.setAttribute("content", `${product.name} : ${product.quote} Commandez directement via WhatsApp.`);
 
-  let activeIdx = 0;
+  const startVariant = firstInStockVariant(product);
+  let activeIdx = product.variants.indexOf(startVariant);
   const variant = () => product.variants[activeIdx];
   const sizes = productSizes(product);
   let activeSize = sizes.includes("M") ? "M" : sizes[0];
   let qty = 1;
+  const allSoldOut = !product.variants.some(isInStock);
 
   mount.innerHTML = `
     <nav class="breadcrumb" aria-label="Fil d'Ariane">
@@ -44,11 +46,16 @@ function renderProductPage() {
     <div class="product-layout">
       <div class="product-media">
         <span class="tag-premium">Édition premium</span>
-        ${buildBadge(product)}
+        ${allSoldOut ? '<span class="tag-badge tag-badge--soldout">Épuisé</span>' : buildBadge(product)}
         <img id="pd-img" src="${variant().img}" alt="${product.name} — coloris ${variant().color}" width="1000" height="1000">
       </div>
       <div class="product-info">
-        <h1>${product.name}</h1>
+        <div class="product-title-row">
+          <h1>${product.name}</h1>
+          <button type="button" id="pd-share" class="share-btn" aria-label="Partager ce produit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="18" cy="5" r="2.8"/><circle cx="6" cy="12" r="2.8"/><circle cx="18" cy="19" r="2.8"/><path d="M8.5 10.5l7-4M8.5 13.5l7 4"/></svg>
+          </button>
+        </div>
         <p class="quote">${product.quote}</p>
         <div id="pd-swatches"></div>
         <div class="size-row">
@@ -61,8 +68,8 @@ function renderProductPage() {
           </div>
         </div>
         <div class="product-price">${product.price} <small>FCFA</small></div>
-        <button type="button" id="pd-order" class="btn btn-primary btn-lg add-to-cart-btn">
-          ${cartIconSVG()} Ajouter au panier
+        <button type="button" id="pd-order" class="btn btn-primary btn-lg add-to-cart-btn" ${allSoldOut ? "disabled" : ""}>
+          ${allSoldOut ? "Épuisé" : `${cartIconSVG()} Ajouter au panier`}
         </button>
         <a class="cart-continue" href="panier.html">Voir mon panier →</a>
 
@@ -95,6 +102,32 @@ function renderProductPage() {
     </div>
   `;
 
+  const shareBtn = mount.querySelector("#pd-share");
+  shareBtn.addEventListener("click", async () => {
+    const url = shareUrl(product.id);
+    const shareData = { title: `${product.name} — Probishirt`, text: product.quote, url };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (e) {
+        /* utilisateur a annulé, rien à faire */
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        const original = shareBtn.innerHTML;
+        shareBtn.classList.add("is-copied");
+        shareBtn.innerHTML = "✓";
+        setTimeout(() => {
+          shareBtn.classList.remove("is-copied");
+          shareBtn.innerHTML = original;
+        }, 1400);
+      } catch (e) {
+        window.prompt("Copie ce lien :", url);
+      }
+    }
+  });
+
   const sizeSelect = mount.querySelector(`#size-${product.id}-detail`);
   if (sizeSelect) {
     sizeSelect.id = "pd-size";
@@ -114,6 +147,7 @@ function renderProductPage() {
 
   const orderBtn = mount.querySelector("#pd-order");
   orderBtn.addEventListener("click", () => {
+    if (orderBtn.disabled || !isInStock(variant())) return;
     addToCart({
       id: product.id,
       name: product.name,
@@ -141,14 +175,16 @@ function renderProductPage() {
     holder.innerHTML = `<div class="swatches" role="group" aria-label="Choisir un coloris">
       ${product.variants
         .map(
-          (v, i) => `<button type="button" class="swatch" data-idx="${i}" style="background:${v.hex}" aria-pressed="${i === activeIdx}" aria-label="${v.color}"></button>`
+          (v, i) => `<button type="button" class="swatch${isInStock(v) ? "" : " swatch--out"}" data-idx="${i}" style="background:${v.hex}" aria-pressed="${i === activeIdx}" aria-label="${v.color}${isInStock(v) ? "" : " (épuisé)"}" ${isInStock(v) ? "" : "disabled"}></button>`
         )
         .join("")}
-      <span class="swatch-label">${variant().color}</span>
+      <span class="swatch-label">${variant().color}${isInStock(variant()) ? "" : " — épuisé"}</span>
     </div>`;
     holder.querySelectorAll(".swatch").forEach((btn) => {
       btn.addEventListener("click", () => {
-        activeIdx = Number(btn.dataset.idx);
+        const idx = Number(btn.dataset.idx);
+        if (!isInStock(product.variants[idx])) return;
+        activeIdx = idx;
         mount.querySelector("#pd-img").src = variant().img;
         mount.querySelector("#pd-img").alt = `${product.name} — coloris ${variant().color}`;
         renderSwatches();

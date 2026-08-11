@@ -77,11 +77,14 @@ function rowsToProducts(rows) {
 
     const color = (row[idx.color] || "").trim();
     const img = (row[idx.image_url] || "").trim();
+    const inStockRaw = (row[idx.in_stock] || "").trim().toLowerCase();
+    const inStock = !["non", "false", "0", "no"].includes(inStockRaw);
     if (color && img) {
       byId[id].variants.push({
         color,
         hex: (row[idx.hex] || "#0b0b0d").trim(),
-        img
+        img,
+        inStock
       });
     }
   }

@@ -25,6 +25,8 @@ var DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
 
 // Les prix ci-dessous sont des exemples à ajuster si besoin.
 // "badge" est facultatif : "nouveau", "bestseller", ou omis.
+// Pour un coloris en rupture de stock, ajoute "inStock: false" dans
+// son objet variant (par défaut, tout est considéré en stock).
 var PRODUCTS = [
   {
     id: "sagesse-divine",
