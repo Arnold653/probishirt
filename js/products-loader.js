@@ -79,12 +79,17 @@ function rowsToProducts(rows) {
     const img = (row[idx.image_url] || "").trim();
     const inStockRaw = (row[idx.in_stock] || "").trim().toLowerCase();
     const inStock = !["non", "false", "0", "no"].includes(inStockRaw);
+    const gallery = (row[idx.gallery] || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
     if (color && img) {
       byId[id].variants.push({
         color,
         hex: (row[idx.hex] || "#0b0b0d").trim(),
         img,
-        inStock
+        inStock,
+        gallery
       });
     }
   }

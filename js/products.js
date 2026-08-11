@@ -27,6 +27,15 @@ var DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
 // "badge" est facultatif : "nouveau", "bestseller", ou omis.
 // Pour un coloris en rupture de stock, ajoute "inStock: false" dans
 // son objet variant (par défaut, tout est considéré en stock).
+// Pour plusieurs photos par coloris (face, dos, zoom...), ajoute un
+// tableau "gallery": ["chemin1.jpg", "chemin2.jpg"] dans le variant.
+// Zones de livraison et délais estimés — affichés sur la page
+// Contact et sur chaque fiche produit. Ajoute/modifie librement.
+var DELIVERY_INFO = [
+  { zone: "Cotonou", delay: "24 à 48h" },
+  { zone: "Reste du Bénin", delay: "3 à 5 jours" }
+];
+
 var PRODUCTS = [
   {
     id: "sagesse-divine",

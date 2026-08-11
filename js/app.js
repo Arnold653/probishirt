@@ -170,6 +170,13 @@ function wireSocialLinks() {
   });
 }
 
+function wireDeliveryInfo() {
+  const el = document.getElementById("delivery-zones-text");
+  if (!el || !window.DELIVERY_INFO || !DELIVERY_INFO.length) return;
+  const zones = DELIVERY_INFO.map((d) => `${d.zone} : ${d.delay}`).join(" · ");
+  el.textContent = `${zones}. Le délai exact vous est confirmé directement sur WhatsApp après votre commande.`;
+}
+
 function wireGlobalWhatsApp() {
   const generalMsg = "Bonjour Probishirt, j'aimerais en savoir plus sur votre collection.";
   document.querySelectorAll("[data-wa-general]").forEach((a) => {
@@ -213,6 +220,7 @@ function wireMobileMenu() {
 document.addEventListener("DOMContentLoaded", () => {
   wireMobileMenu();
   wireSocialLinks();
+  wireDeliveryInfo();
   window.productsReadyPromise.then(() => {
     renderCatalog("catalog-grid");
     renderCatalog("featured-grid", PRODUCTS.slice(0, 3));

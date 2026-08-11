@@ -44,10 +44,13 @@ function renderProductPage() {
       <span aria-current="page">${product.name}</span>
     </nav>
     <div class="product-layout">
-      <div class="product-media">
-        <span class="tag-premium">Édition premium</span>
-        ${allSoldOut ? '<span class="tag-badge tag-badge--soldout">Épuisé</span>' : buildBadge(product)}
-        <img id="pd-img" src="${variant().img}" alt="${product.name} — coloris ${variant().color}" width="1000" height="1000">
+      <div class="product-media-col">
+        <div class="product-media">
+          <span class="tag-premium">Édition premium</span>
+          ${allSoldOut ? '<span class="tag-badge tag-badge--soldout">Épuisé</span>' : buildBadge(product)}
+          <img id="pd-img" src="${variant().img}" alt="${product.name} — coloris ${variant().color}" width="1000" height="1000">
+        </div>
+        <div class="product-thumbs" id="pd-thumbs"></div>
       </div>
       <div class="product-info">
         <h1>${product.name}</h1>
@@ -94,7 +97,7 @@ function renderProductPage() {
             <h3>Livraison &amp; retours</h3>
             <ul class="product-facts">
               <li>Commande confirmée directement sur WhatsApp</li>
-              <li>Délai communiqué selon votre localisation</li>
+              ${DELIVERY_INFO.map((d) => `<li>${d.zone} : ${d.delay}</li>`).join("")}
               <li>Échange possible en cas de souci de taille</li>
             </ul>
           </section>
@@ -167,6 +170,30 @@ function renderProductPage() {
     }, 1400);
   });
 
+  function renderThumbs() {
+    const holder = mount.querySelector("#pd-thumbs");
+    const images = [variant().img, ...(variant().gallery || [])];
+    if (images.length < 2) {
+      holder.innerHTML = "";
+      return;
+    }
+    holder.innerHTML = images
+      .map(
+        (src, i) =>
+          `<button type="button" class="thumb${i === 0 ? " is-active" : ""}" data-src="${src}" aria-label="Photo ${i + 1}">
+            <img src="${src}" alt="" width="80" height="80">
+          </button>`
+      )
+      .join("");
+    holder.querySelectorAll(".thumb").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        mount.querySelector("#pd-img").src = btn.dataset.src;
+        holder.querySelectorAll(".thumb").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+      });
+    });
+  }
+
   function renderSwatches() {
     const holder = mount.querySelector("#pd-swatches");
     if (product.variants.length < 2) {
@@ -189,10 +216,12 @@ function renderProductPage() {
         mount.querySelector("#pd-img").src = variant().img;
         mount.querySelector("#pd-img").alt = `${product.name} — coloris ${variant().color}`;
         renderSwatches();
+        renderThumbs();
       });
     });
   }
   renderSwatches();
+  renderThumbs();
 
   // Produits similaires
   const relatedGrid = document.getElementById("related-grid");
