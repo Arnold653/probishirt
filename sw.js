@@ -1,5 +1,5 @@
 // Service worker Probishirt — mise en cache pour un accès rapide et hors-ligne
-const CACHE_NAME = "probishirt-v8";
+const CACHE_NAME = "probishirt-v9";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
@@ -50,18 +50,37 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const network = fetch(event.request)
-        .then((response) => {
+  const url = new URL(event.request.url);
+  const isStaticAsset = url.pathname.startsWith("/assets/");
+
+  if (isStaticAsset) {
+    // Images : cache d'abord (elles changent rarement), réseau en secours.
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        if (cached) return cached;
+        return fetch(event.request).then((response) => {
           if (response && response.status === 200) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
           }
           return response;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
+        });
+      })
+    );
+    return;
+  }
+
+  // Pages, CSS, JS : toujours le réseau en priorité pour ne jamais
+  // servir une version périmée du site. Le cache ne sert que hors-ligne.
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });

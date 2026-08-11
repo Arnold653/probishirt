@@ -16,7 +16,7 @@ const WHATSAPP_NUMBER = "2290199261741";
 var SOCIAL_LINKS = {
   instagram: "",
   facebook: "https://www.facebook.com/profile.php?id=61566377935391",
-  tiktok: ""
+  tiktok: "https://www.tiktok.com/@probishirt"
 };
 
 // Tailles proposées par défaut pour tous les produits (modifiable
