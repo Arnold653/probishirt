@@ -177,6 +177,35 @@ function wireDeliveryInfo() {
   el.textContent = `${zones}. Le délai exact vous est confirmé directement sur WhatsApp après votre commande.`;
 }
 
+function wireCollectionToolbar() {
+  const searchInput = document.getElementById("product-search");
+  const sortSelect = document.getElementById("product-sort");
+  const emptyMsg = document.getElementById("collection-empty");
+  if (!searchInput || !sortSelect) return;
+
+  function apply() {
+    const term = searchInput.value.trim().toLowerCase();
+    let list = PRODUCTS.filter(
+      (p) => !term || p.name.toLowerCase().includes(term) || (p.quote || "").toLowerCase().includes(term)
+    );
+
+    const sortMode = sortSelect.value;
+    if (sortMode === "price-asc") {
+      list = list.slice().sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+    } else if (sortMode === "price-desc") {
+      list = list.slice().sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+    } else if (sortMode === "new") {
+      list = list.slice().sort((a, b) => (b.badge === "nouveau") - (a.badge === "nouveau"));
+    }
+
+    renderCatalog("catalog-grid", list);
+    if (emptyMsg) emptyMsg.hidden = list.length > 0;
+  }
+
+  searchInput.addEventListener("input", apply);
+  sortSelect.addEventListener("change", apply);
+}
+
 function wireGlobalWhatsApp() {
   const generalMsg = "Bonjour Probishirt, j'aimerais en savoir plus sur votre collection.";
   document.querySelectorAll("[data-wa-general]").forEach((a) => {
@@ -227,6 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
     wireGlobalWhatsApp();
     setYear();
     highlightActiveNav();
+    wireCollectionToolbar();
   });
 });
 

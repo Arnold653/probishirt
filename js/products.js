@@ -29,6 +29,19 @@ var DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
 // son objet variant (par défaut, tout est considéré en stock).
 // Pour plusieurs photos par coloris (face, dos, zoom...), ajoute un
 // tableau "gallery": ["chemin1.jpg", "chemin2.jpg"] dans le variant.
+// Avis clients affichés sur chaque fiche produit. Remplace le
+// contenu d'exemple ci-dessous par de vrais avis dès que tu en as —
+// tant que "isExample" vaut true, un badge "Exemple" reste visible
+// pour ne jamais faire passer un avis fictif pour un vrai.
+var REVIEWS = [
+  {
+    author: "Exemple de client",
+    rating: 5,
+    text: "Ceci est un exemple d'avis. Remplace ce texte par un vrai retour client dès que tu en reçois un.",
+    isExample: true
+  }
+];
+
 // Zones de livraison et délais estimés — affichés sur la page
 // Contact et sur chaque fiche produit. Ajoute/modifie librement.
 var DELIVERY_INFO = [

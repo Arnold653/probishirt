@@ -74,6 +74,16 @@
 
   <section class="collection">
     <div class="wrap">
+      <div class="collection-toolbar">
+        <input type="search" id="product-search" placeholder="Rechercher un produit…" aria-label="Rechercher un produit">
+        <select id="product-sort" aria-label="Trier">
+          <option value="default">Trier : par défaut</option>
+          <option value="new">Nouveautés d'abord</option>
+          <option value="price-asc">Prix croissant</option>
+          <option value="price-desc">Prix décroissant</option>
+        </select>
+      </div>
+      <p class="collection-empty" id="collection-empty" hidden>Aucun produit ne correspond à ta recherche.</p>
       <div class="grid" id="catalog-grid"><p class="loading-text">Chargement de la collection…</p></div>
     </div>
   </section>

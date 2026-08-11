@@ -101,6 +101,22 @@ function renderProductPage() {
               <li>Échange possible en cas de souci de taille</li>
             </ul>
           </section>
+
+          ${REVIEWS.length ? `<section class="product-section">
+            <h3>Avis clients</h3>
+            <div class="reviews-list">
+              ${REVIEWS.map(
+                (r) => `<div class="review-item">
+                  <div class="review-head">
+                    <span class="review-stars">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</span>
+                    <strong>${r.author}</strong>
+                    ${r.isExample ? '<span class="review-example-badge">Exemple</span>' : ""}
+                  </div>
+                  <p>${r.text}</p>
+                </div>`
+              ).join("")}
+            </div>
+          </section>` : ""}
         </div>
       </div>
     </div>
