@@ -50,12 +50,7 @@ function renderProductPage() {
         <img id="pd-img" src="${variant().img}" alt="${product.name} — coloris ${variant().color}" width="1000" height="1000">
       </div>
       <div class="product-info">
-        <div class="product-title-row">
-          <h1>${product.name}</h1>
-          <button type="button" id="pd-share" class="share-btn" aria-label="Partager ce produit">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="18" cy="5" r="2.8"/><circle cx="6" cy="12" r="2.8"/><circle cx="18" cy="19" r="2.8"/><path d="M8.5 10.5l7-4M8.5 13.5l7 4"/></svg>
-          </button>
-        </div>
+        <h1>${product.name}</h1>
         <p class="quote">${product.quote}</p>
         <div id="pd-swatches"></div>
         <div class="size-row">
@@ -71,7 +66,13 @@ function renderProductPage() {
         <button type="button" id="pd-order" class="btn btn-primary btn-lg add-to-cart-btn" ${allSoldOut ? "disabled" : ""}>
           ${allSoldOut ? "Épuisé" : `${cartIconSVG()} Ajouter au panier`}
         </button>
-        <a class="cart-continue" href="panier.html">Voir mon panier →</a>
+        <div class="product-links-row">
+          <a class="cart-continue" href="panier.html">Voir mon panier →</a>
+          <button type="button" id="pd-share" class="share-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="18" cy="5" r="2.8"/><circle cx="6" cy="12" r="2.8"/><circle cx="18" cy="19" r="2.8"/><path d="M8.5 10.5l7-4M8.5 13.5l7 4"/></svg>
+            Partager
+          </button>
+        </div>
 
         <div class="product-sections">
           <section class="product-section">
