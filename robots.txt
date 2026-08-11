@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# ⚠️ Si tu passes à un nom de domaine personnalisé (ex. probishirt.com),
+# mets à jour la ligne ci-dessous avec la nouvelle adresse.
+Sitemap: https://probishirt.vercel.app/sitemap.xml
