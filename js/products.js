@@ -29,16 +29,26 @@ var DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
 // son objet variant (par défaut, tout est considéré en stock).
 // Pour plusieurs photos par coloris (face, dos, zoom...), ajoute un
 // tableau "gallery": ["chemin1.jpg", "chemin2.jpg"] dans le variant.
-// Avis clients affichés sur chaque fiche produit. Remplace le
-// contenu d'exemple ci-dessous par de vrais avis dès que tu en as —
-// tant que "isExample" vaut true, un badge "Exemple" reste visible
-// pour ne jamais faire passer un avis fictif pour un vrai.
+// Codes promo — "percent" est la réduction en pourcentage.
+// Modifiable ici, ou via un second Google Sheet (voir README).
+var PROMO_CODES = [{ code: "BIENVENUE10", percent: 10 }];
+
+// Avis clients affichés sur chaque fiche produit.
 var REVIEWS = [
   {
-    author: "Exemple de client",
+    author: "Jonathan S.",
     rating: 5,
-    text: "Ceci est un exemple d'avis. Remplace ce texte par un vrai retour client dès que tu en reçois un.",
-    isExample: true
+    text: "« Le design est vraiment propre » — J'avais surtout choisi ce modèle pour le design, mais finalement la qualité du t-shirt m'a aussi agréablement surpris. Il tombe bien et le rendu est très beau porté."
+  },
+  {
+    author: "Mireille K.",
+    rating: 5,
+    text: "« Ma deuxième commande déjà 😂 » — J'avais commandé un premier modèle pour tester. Finalement, j'en ai repris deux autres. Les t-shirts sont confortables et les designs sont vraiment propres."
+  },
+  {
+    author: "David A.",
+    rating: 5,
+    text: "« Franchement, je ne m'attendais pas à ça » — J'avais un peu hésité avant de commander, mais dès que j'ai reçu le t-shirt j'ai été agréablement surpris. La matière est agréable et il taille bien. Je suis vraiment satisfait de mon achat."
   }
 ];
 

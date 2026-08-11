@@ -620,6 +620,33 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
   padding: 0;
 }
 .cart-remove:hover { color: #c0392b; }
+.cart-promo {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.cart-promo input {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  text-transform: uppercase;
+}
+.promo-feedback {
+  font-size: 12.5px;
+  margin: 0 0 20px;
+}
+.promo-feedback.is-error { color: #c0392b; }
+.cart-subtotal-row,
+.cart-discount-row {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.cart-discount-row { color: #1c8a4d; }
 .cart-summary {
   border-top: 1px solid var(--line);
   padding-top: 24px;

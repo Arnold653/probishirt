@@ -4,6 +4,38 @@
    ========================================================= */
 
 const CART_KEY = "probishirt_cart";
+const PROMO_KEY = "probishirt_promo";
+
+function getAppliedPromo() {
+  try {
+    const raw = localStorage.getItem(PROMO_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function applyPromoCode(codeInput) {
+  const code = String(codeInput || "").trim().toUpperCase();
+  const found = (window.PROMO_CODES || []).find((p) => p.code === code);
+  if (!found) return { ok: false };
+  localStorage.setItem(PROMO_KEY, JSON.stringify(found));
+  return { ok: true, promo: found };
+}
+
+function clearPromoCode() {
+  localStorage.removeItem(PROMO_KEY);
+}
+
+function cartDiscount() {
+  const promo = getAppliedPromo();
+  if (!promo) return 0;
+  return Math.round((cartTotal() * promo.percent) / 100);
+}
+
+function cartTotalWithDiscount() {
+  return Math.max(0, cartTotal() - cartDiscount());
+}
 
 function parsePrice(priceStr) {
   const digits = String(priceStr).replace(/[^\d]/g, "");
@@ -92,16 +124,40 @@ function buildCartMessage() {
     const lineTotal = parsePrice(it.price) * it.qty;
     return `${i + 1}. ${it.name} (${it.color}, taille ${it.size}) x${it.qty} — ${formatPrice(lineTotal)} FCFA`;
   });
-  const total = cartTotal();
-  return (
-    "Bonjour Probishirt, je souhaite commander :\n" +
-    lines.join("\n") +
-    `\n\nTotal : ${formatPrice(total)} FCFA`
-  );
+  const subtotal = cartTotal();
+  const promo = getAppliedPromo();
+  let totalBlock = `\n\nTotal : ${formatPrice(subtotal)} FCFA`;
+  if (promo) {
+    const discount = cartDiscount();
+    totalBlock =
+      `\n\nSous-total : ${formatPrice(subtotal)} FCFA` +
+      `\nCode promo ${promo.code} (-${promo.percent}%) : -${formatPrice(discount)} FCFA` +
+      `\nTotal : ${formatPrice(cartTotalWithDiscount())} FCFA`;
+  }
+  return "Bonjour Probishirt, je souhaite commander :\n" + lines.join("\n") + totalBlock;
 }
 
 function cartIconSVG() {
   return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="20" r="1.4" fill="currentColor" stroke="none"/><circle cx="17" cy="20" r="1.4" fill="currentColor" stroke="none"/><path d="M2.5 3h2l2.4 12.1a1.8 1.8 0 0 0 1.8 1.5h8a1.8 1.8 0 0 0 1.8-1.4L20.5 7H6"/></svg>`;
+}
+
+function logOrderToSheet(cart, total, promo) {
+  if (!window.ORDER_LOG_URL) return;
+  const payload = {
+    date: new Date().toLocaleString("fr-FR"),
+    items: cart.map((it) => `${it.name} (${it.color}, ${it.size}) x${it.qty}`).join(" | "),
+    total: total,
+    promo: promo ? promo.code : ""
+  };
+  try {
+    fetch(window.ORDER_LOG_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch (e) {
+    /* best-effort : ne bloque jamais la commande WhatsApp */
+  }
 }
 
 document.addEventListener("DOMContentLoaded", updateCartBadge);

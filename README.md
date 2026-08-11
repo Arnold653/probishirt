@@ -46,7 +46,7 @@ Colonnes attendues sur la première ligne du Sheet, une ligne par
 coloris (même `id` répété pour un produit à plusieurs coloris) :
 
 ```
-id | name | quote | description | price | color | hex | image_url | badge | sizes | in_stock
+id | name | quote | description | price | color | hex | image_url | badge | sizes | in_stock | gallery
 ```
 
 - `badge` (facultatif) : `nouveau`, `bestseller`, ou laisser vide
@@ -56,6 +56,45 @@ id | name | quote | description | price | color | hex | image_url | badge | size
 - `in_stock` (facultatif) : mets `non` pour ce coloris précis s'il est
   en rupture de stock — le coloris apparaît alors barré et non
   sélectionnable. Laisser vide ou mettre `oui` = en stock.
+- `gallery` (facultatif) : liens vers des photos supplémentaires pour
+  ce coloris (face, dos, zoom...), séparés par des virgules.
+
+## Codes promo (facultatif, via un second Sheet)
+
+Par défaut, le seul code actif est `BIENVENUE10` (-10%), défini dans
+`js/products.js` (`PROMO_CODES`). Pour gérer tes codes depuis un
+Google Sheet à la place :
+
+1. Crée un nouveau Sheet avec les colonnes : `code | percent | active`
+2. Publie-le en CSV (même méthode que pour les produits, voir plus haut)
+3. Colle le lien dans `sheet-config.json`, champ `promoCsvUrl`
+
+`active` : mets `non` pour désactiver un code sans le supprimer.
+
+## Historique des commandes (facultatif, via Google Apps Script)
+
+Chaque commande peut s'enregistrer automatiquement dans un Google
+Sheet dédié (date, articles, total, code promo utilisé) au moment où
+le client clique "Commander sur WhatsApp" — en plus du message
+WhatsApp, pas à la place.
+
+1. Crée un nouveau Google Sheet, nomme l'onglet `Commandes`, avec les
+   en-têtes : `date | items | total | promo`
+2. Dans ce Sheet : **Extensions → Apps Script**, remplace le contenu
+   par :
+   ```js
+   function doPost(e) {
+     const data = JSON.parse(e.postData.contents);
+     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Commandes");
+     sheet.appendRow([data.date, data.items, data.total, data.promo]);
+     return ContentService.createTextOutput("OK");
+   }
+   ```
+3. **Déployer → Nouveau déploiement → Type : Application Web**
+   — Exécuter en tant que : Moi
+   — Accès : Tout le monde
+   → Déployer, autorise l'accès, copie l'URL fournie
+4. Colle cette URL dans `sheet-config.json`, champ `orderLogUrl`
 
 ## Déployer sur GitHub + Vercel
 

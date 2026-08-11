@@ -44,14 +44,34 @@ function renderCartPage() {
     })
     .join("");
 
-  const total = cartTotal();
+  const subtotal = cartTotal();
+  const promo = getAppliedPromo();
+  const discount = cartDiscount();
+  const finalTotal = cartTotalWithDiscount();
 
   mount.innerHTML = `
     <div class="cart-list">${rows}</div>
+    <div class="cart-promo">
+      <input type="text" id="promo-input" placeholder="Code promo" value="${promo ? promo.code : ""}" ${promo ? "disabled" : ""}>
+      ${promo
+        ? `<button type="button" id="promo-remove" class="btn btn-dark">Retirer</button>`
+        : `<button type="button" id="promo-apply" class="btn btn-dark">Appliquer</button>`}
+    </div>
+    <p class="promo-feedback" id="promo-feedback" hidden></p>
     <div class="cart-summary">
+      ${promo
+        ? `<div class="cart-total-row cart-subtotal-row">
+             <span>Sous-total</span>
+             <span>${formatPrice(subtotal)} <small>FCFA</small></span>
+           </div>
+           <div class="cart-total-row cart-discount-row">
+             <span>Code ${promo.code} (-${promo.percent}%)</span>
+             <span>−${formatPrice(discount)} <small>FCFA</small></span>
+           </div>`
+        : ""}
       <div class="cart-total-row">
         <span>Total</span>
-        <span class="cart-total-value">${formatPrice(total)} <small>FCFA</small></span>
+        <span class="cart-total-value">${formatPrice(finalTotal)} <small>FCFA</small></span>
       </div>
       <a id="cart-checkout" class="btn btn-primary btn-lg" href="${waLink(buildCartMessage())}" target="_blank" rel="noopener">
         ${waIconSVG()} Commander sur WhatsApp
@@ -59,6 +79,37 @@ function renderCartPage() {
       <a class="cart-continue" href="collection.html">← Continuer mes achats</a>
     </div>
   `;
+
+  const promoInput = mount.querySelector("#promo-input");
+  const promoFeedback = mount.querySelector("#promo-feedback");
+  const applyBtn = mount.querySelector("#promo-apply");
+  const removeBtn = mount.querySelector("#promo-remove");
+
+  if (applyBtn) {
+    applyBtn.addEventListener("click", () => {
+      const result = applyPromoCode(promoInput.value);
+      if (result.ok) {
+        renderCartPage();
+      } else {
+        promoFeedback.hidden = false;
+        promoFeedback.textContent = "Code invalide ou expiré.";
+        promoFeedback.classList.add("is-error");
+      }
+    });
+  }
+  if (removeBtn) {
+    removeBtn.addEventListener("click", () => {
+      clearPromoCode();
+      renderCartPage();
+    });
+  }
+
+  const checkoutLink = mount.querySelector("#cart-checkout");
+  if (checkoutLink) {
+    checkoutLink.addEventListener("click", () => {
+      logOrderToSheet(getCart(), cartTotalWithDiscount(), getAppliedPromo());
+    });
+  }
 
   mount.querySelectorAll(".qty-btn").forEach((btn) => {
     btn.addEventListener("click", () => {

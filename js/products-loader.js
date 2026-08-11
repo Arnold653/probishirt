@@ -97,10 +97,28 @@ function rowsToProducts(rows) {
   return order.map((id) => byId[id]).filter((p) => p.variants.length > 0);
 }
 
+function rowsToPromoCodes(rows) {
+  if (!rows.length) return [];
+  const header = rows[0].map((h) => h.trim().toLowerCase());
+  const idx = Object.fromEntries(header.map((h, i) => [h, i]));
+  const codes = [];
+  for (let r = 1; r < rows.length; r++) {
+    const row = rows[r];
+    const code = (row[idx.code] || "").trim().toUpperCase();
+    const percent = parseFloat(row[idx.percent] || "0");
+    const activeRaw = (row[idx.active] || "").trim().toLowerCase();
+    const active = !["non", "false", "0", "no"].includes(activeRaw);
+    if (code && percent > 0 && active) codes.push({ code, percent });
+  }
+  return codes;
+}
+
 window.productsReadyPromise = (async function loadProducts() {
+  let cfg = {};
   try {
     const cfgRes = await fetch("sheet-config.json", { cache: "no-store" });
-    const cfg = cfgRes.ok ? await cfgRes.json() : {};
+    cfg = cfgRes.ok ? await cfgRes.json() : {};
+
     if (cfg.csvUrl) {
       const sep = cfg.csvUrl.includes("?") ? "&" : "?";
       const csvRes = await fetch(`${cfg.csvUrl}${sep}t=${Date.now()}`, { cache: "no-store" });
@@ -119,5 +137,21 @@ window.productsReadyPromise = (async function loadProducts() {
   } catch (e) {
     console.warn("Google Sheet indisponible, produits par défaut utilisés.", e);
   }
+
+  try {
+    if (cfg.promoCsvUrl) {
+      const sep = cfg.promoCsvUrl.includes("?") ? "&" : "?";
+      const promoRes = await fetch(`${cfg.promoCsvUrl}${sep}t=${Date.now()}`, { cache: "no-store" });
+      if (promoRes.ok) {
+        const text = await promoRes.text();
+        const codes = rowsToPromoCodes(parseCSV(text));
+        if (codes.length) window.PROMO_CODES = codes;
+      }
+    }
+  } catch (e) {
+    console.warn("Sheet des codes promo indisponible, codes par défaut utilisés.", e);
+  }
+
+  window.ORDER_LOG_URL = cfg.orderLogUrl || null;
   return window.PRODUCTS;
 })();
