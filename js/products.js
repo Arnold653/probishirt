@@ -15,7 +15,7 @@ const WHATSAPP_NUMBER = "2290199261741";
 // n'apparaisse pas dans le footer si tu n'as pas encore ce compte.
 var SOCIAL_LINKS = {
   instagram: "",
-  facebook: "",
+  facebook: "https://www.facebook.com/profile.php?id=61566377935391",
   tiktok: ""
 };
 

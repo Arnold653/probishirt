@@ -31,8 +31,7 @@ function renderProductPage() {
   const variant = () => product.variants[activeIdx];
   const sizes = productSizes(product);
   let activeSize = sizes.includes("M") ? "M" : sizes[0];
-  const orderMessage = () =>
-    `Bonjour Probishirt, je souhaite commander : ${product.name} (${variant().color}, taille ${activeSize}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
+  let qty = 1;
 
   mount.innerHTML = `
     <nav class="breadcrumb" aria-label="Fil d'Ariane">
@@ -55,11 +54,17 @@ function renderProductPage() {
         <div class="size-row">
           <label for="pd-size">Taille</label>
           ${buildSizeSelect(product, "-detail")}
+          <div class="cart-qty" id="pd-qty">
+            <button type="button" class="qty-btn" data-action="dec" aria-label="Diminuer la quantité">−</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" data-action="inc" aria-label="Augmenter la quantité">+</button>
+          </div>
         </div>
         <div class="product-price">${product.price} <small>FCFA</small></div>
-        <a id="pd-order" class="btn btn-primary btn-lg" href="${waLink(orderMessage())}" target="_blank" rel="noopener">
-          ${waIconSVG()} Commander sur WhatsApp
-        </a>
+        <button type="button" id="pd-order" class="btn btn-primary btn-lg add-to-cart-btn">
+          ${cartIconSVG()} Ajouter au panier
+        </button>
+        <a class="cart-continue" href="panier.html">Voir mon panier →</a>
 
         <div class="product-sections">
           <section class="product-section">
@@ -95,9 +100,37 @@ function renderProductPage() {
     sizeSelect.id = "pd-size";
     sizeSelect.addEventListener("change", () => {
       activeSize = sizeSelect.value;
-      mount.querySelector("#pd-order").href = waLink(orderMessage());
     });
   }
+
+  const qtyBox = mount.querySelector("#pd-qty");
+  const qtyValueEl = qtyBox.querySelector(".qty-value");
+  qtyBox.querySelectorAll(".qty-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      qty = Math.max(1, qty + (btn.dataset.action === "inc" ? 1 : -1));
+      qtyValueEl.textContent = qty;
+    });
+  });
+
+  const orderBtn = mount.querySelector("#pd-order");
+  orderBtn.addEventListener("click", () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      color: variant().color,
+      size: activeSize,
+      price: product.price,
+      img: variant().img,
+      qty
+    });
+    const original = orderBtn.innerHTML;
+    orderBtn.classList.add("is-added");
+    orderBtn.innerHTML = "✓ Ajouté au panier";
+    setTimeout(() => {
+      orderBtn.classList.remove("is-added");
+      orderBtn.innerHTML = original;
+    }, 1400);
+  });
 
   function renderSwatches() {
     const holder = mount.querySelector("#pd-swatches");
@@ -118,7 +151,6 @@ function renderProductPage() {
         activeIdx = Number(btn.dataset.idx);
         mount.querySelector("#pd-img").src = variant().img;
         mount.querySelector("#pd-img").alt = `${product.name} — coloris ${variant().color}`;
-        mount.querySelector("#pd-order").href = waLink(orderMessage());
         renderSwatches();
       });
     });

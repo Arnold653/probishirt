@@ -56,9 +56,6 @@ function renderCard(product) {
   el.dataset.active = "0";
 
   const variant = product.variants[0];
-  const defaultSize = productSizes(product).includes("M") ? "M" : productSizes(product)[0];
-  const orderMsg = (color, size) =>
-    `Bonjour Probishirt, je souhaite commander : ${product.name} (${color}, taille ${size}) — ${product.price} FCFA.\n${shareUrl(product.id)}`;
 
   el.innerHTML = `
     <a class="card-media" href="produit.html?id=${product.id}" aria-label="Voir ${product.name}">
@@ -76,9 +73,9 @@ function renderCard(product) {
       </div>
       <div class="card-foot">
         <div class="price">${product.price} <small>FCFA</small></div>
-        <a class="order-btn" href="${waLink(orderMsg(variant.color, defaultSize))}" target="_blank" rel="noopener">
-          ${waIconSVG()} Commander
-        </a>
+        <button type="button" class="order-btn add-to-cart-btn">
+          ${cartIconSVG()} Ajouter
+        </button>
       </div>
     </div>
   `;
@@ -86,12 +83,9 @@ function renderCard(product) {
   const swatchButtons = el.querySelectorAll(".swatch");
   const sizeSelect = el.querySelector(".size-select");
   const img = el.querySelector("img");
-  const orderBtn = el.querySelector(".order-btn");
+  const addBtn = el.querySelector(".add-to-cart-btn");
   let activeColor = variant.color;
-
-  function refreshOrderLink() {
-    orderBtn.href = waLink(orderMsg(activeColor, sizeSelect.value));
-  }
+  let activeImg = variant.img;
 
   swatchButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -103,11 +97,28 @@ function renderCard(product) {
       swatchButtons.forEach((b) => b.setAttribute("aria-pressed", "false"));
       btn.setAttribute("aria-pressed", "true");
       activeColor = v.color;
-      refreshOrderLink();
+      activeImg = v.img;
     });
   });
 
-  sizeSelect.addEventListener("change", refreshOrderLink);
+  addBtn.addEventListener("click", () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      color: activeColor,
+      size: sizeSelect.value,
+      price: product.price,
+      img: activeImg,
+      qty: 1
+    });
+    const original = addBtn.innerHTML;
+    addBtn.classList.add("is-added");
+    addBtn.innerHTML = "✓ Ajouté";
+    setTimeout(() => {
+      addBtn.classList.remove("is-added");
+      addBtn.innerHTML = original;
+    }, 1400);
+  });
 
   return el;
 }
