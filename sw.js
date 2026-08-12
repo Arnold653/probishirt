@@ -1,5 +1,5 @@
 // Service worker Probishirt — mise en cache pour un accès rapide et hors-ligne
-const CACHE_NAME = "probishirt-v12";
+const CACHE_NAME = "probishirt-v13";
 const PRECACHE_URLS = [
   "./",
   "./index.html",

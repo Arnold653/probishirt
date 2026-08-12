@@ -143,18 +143,14 @@ function cartIconSVG() {
 
 function logOrderToSheet(cart, total, promo) {
   if (!window.ORDER_LOG_URL) return;
-  const payload = {
+  const params = new URLSearchParams({
     date: new Date().toLocaleString("fr-FR"),
     items: cart.map((it) => `${it.name} (${it.color}, ${it.size}) x${it.qty}`).join(" | "),
     total: total,
     promo: promo ? promo.code : ""
-  };
+  });
   try {
-    fetch(window.ORDER_LOG_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
-    }).catch(() => {});
+    fetch(`${window.ORDER_LOG_URL}?${params.toString()}`, { method: "GET", mode: "no-cors" }).catch(() => {});
   } catch (e) {
     /* best-effort : ne bloque jamais la commande WhatsApp */
   }

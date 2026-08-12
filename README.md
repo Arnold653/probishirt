@@ -83,8 +83,8 @@ WhatsApp, pas à la place.
 2. Dans ce Sheet : **Extensions → Apps Script**, remplace le contenu
    par :
    ```js
-   function doPost(e) {
-     const data = JSON.parse(e.postData.contents);
+   function doGet(e) {
+     const data = e.parameter;
      const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Commandes");
      sheet.appendRow([data.date, data.items, data.total, data.promo]);
      return ContentService.createTextOutput("OK");
