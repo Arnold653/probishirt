@@ -134,7 +134,11 @@ function buildCartMessage() {
       `\nCode promo ${promo.code} (-${promo.percent}%) : -${formatPrice(discount)} FCFA` +
       `\nTotal : ${formatPrice(cartTotalWithDiscount())} FCFA`;
   }
-  return "Bonjour Probishirt, je souhaite commander :\n" + lines.join("\n") + totalBlock;
+  // Aperçu image + titre WhatsApp : uniquement possible pour un seul
+  // article à la fois (un lien = une image, pas de sens pour un panier
+  // à plusieurs produits différents).
+  const shareLink = cart.length === 1 ? `\n${shareUrl(cart[0].id)}` : "";
+  return "Bonjour Probishirt, je souhaite commander :\n" + lines.join("\n") + totalBlock + shareLink;
 }
 
 function cartIconSVG() {
