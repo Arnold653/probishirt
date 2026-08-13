@@ -22,7 +22,7 @@ var SOCIAL_LINKS = {
 // Widget Instagram sur l'accueil (via SnapWidget ou service équivalent).
 // Colle ici l'URL "src" de l'iframe fournie par le service — laisse
 // vide pour afficher un simple bouton "Suivez-nous" à la place.
-var INSTAGRAM_WIDGET_URL = "";
+var INSTAGRAM_WIDGET_URL = "https://snapwidget.com/embed/1128801";
 
 // Tailles proposées par défaut pour tous les produits (modifiable
 // produit par produit avec le champ "sizes").

@@ -684,7 +684,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
 .instagram-section { padding: 80px 0 90px; }
 .instagram-iframe {
   width: 100%;
-  min-height: 420px;
+  min-height: 510px;
   border: none;
 }
 .instagram-fallback {
