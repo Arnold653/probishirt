@@ -123,6 +123,22 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
   height: 76px;
 }
 .header-actions { display: flex; align-items: center; gap: 16px; }
+.push-btn {
+  background: none;
+  border: 1px solid var(--line-invert);
+  border-radius: 999px;
+  color: var(--text-invert);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.push-btn:hover { border-color: var(--blue-bright); color: var(--accent-soft); }
+.push-btn:disabled { opacity: 0.6; cursor: default; }
+@media (max-width: 480px) {
+  .push-btn { font-size: 10.5px; padding: 5px 9px; }
+}
 .cart-link {
   position: relative;
   display: flex;

@@ -1,5 +1,7 @@
 {
   "csvUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRcBhYexMXU5YQoh4wrYCrLxZOeYc8DikK0pxGABRqoxfSD3Vl8sfSkxQL88eNvMuBDnsFqt4BS_Thr/pub?gid=0&single=true&output=csv",
   "promoCsvUrl": "",
-  "orderLogUrl": "https://script.google.com/macros/s/AKfycbzgaIVbMfmpVyuSwzHkNf_ATfn1tNm5rglqHAwGse9QM6KmohrRwKtMt3ItDSMy7pdw0Q/exec"
+  "orderLogUrl": "https://script.google.com/macros/s/AKfycbzgaIVbMfmpVyuSwzHkNf_ATfn1tNm5rglqHAwGse9QM6KmohrRwKtMt3ItDSMy7pdw0Q/exec",
+  "pushSaveUrl": "",
+  "pushSubscribersCsvUrl": ""
 }

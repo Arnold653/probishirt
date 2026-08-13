@@ -24,6 +24,10 @@ var SOCIAL_LINKS = {
 // vide pour afficher un simple bouton "Suivez-nous" à la place.
 var INSTAGRAM_WIDGET_URL = "https://snapwidget.com/embed/1128801";
 
+// Clé publique VAPID pour les notifications push (générée une fois,
+// sans lien avec un compte utilisateur — pas besoin d'y toucher).
+var PUSH_PUBLIC_KEY = "BE0_4aygFo4Tgtg3Bq6NlEhhdx471s64Lzp7i21puV5OwFqlLPI_TNHMmFKtvz6jVgQ2JYQFP1l6-OF3NpL-Nt0";
+
 // Tailles proposées par défaut pour tous les produits (modifiable
 // produit par produit avec le champ "sizes").
 var DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];

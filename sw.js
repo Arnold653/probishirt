@@ -1,5 +1,5 @@
 // Service worker Probishirt — mise en cache pour un accès rapide et hors-ligne
-const CACHE_NAME = "probishirt-v16";
+const CACHE_NAME = "probishirt-v17";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
@@ -13,6 +13,7 @@ const PRECACHE_URLS = [
   "./js/products.js",
   "./js/products-loader.js",
   "./js/cart.js",
+  "./js/push.js",
   "./js/app.js",
   "./js/product-page.js",
   "./js/cart-page.js",
@@ -83,5 +84,36 @@ self.addEventListener("fetch", (event) => {
         return response;
       })
       .catch(() => caches.match(event.request))
+  );
+});
+
+// ---------------- Notifications push ----------------
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (e) {
+    data = { title: "Probishirt", body: event.data ? event.data.text() : "" };
+  }
+  const title = data.title || "Probishirt";
+  const options = {
+    body: data.body || "",
+    icon: "/assets/brand/icons/icon-192.png",
+    badge: "/assets/brand/icons/icon-192.png",
+    data: { url: data.url || "/" }
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/";
+  event.waitUntil(
+    clients.matchAll({ type: "window" }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes(url) && "focus" in client) return client.focus();
+      }
+      if (clients.openWindow) return clients.openWindow(url);
+    })
   );
 });

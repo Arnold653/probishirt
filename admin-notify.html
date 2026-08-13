@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Envoyer une notification — Probishirt</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .admin-wrap { max-width: 480px; margin: 60px auto; padding: 0 24px; }
+  .admin-wrap h1 { font-size: 24px; margin-bottom: 24px; }
+  .admin-field { margin-bottom: 18px; }
+  .admin-field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .admin-field input, .admin-field textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 14px;
+  }
+  .admin-field textarea { min-height: 90px; resize: vertical; }
+  #admin-result { margin-top: 18px; font-size: 13.5px; padding: 12px; border-radius: 10px; }
+  #admin-result.ok { background: #e6f4ea; color: #1c8a4d; }
+  #admin-result.error { background: #fdecea; color: #c0392b; }
+</style>
+</head>
+<body>
+
+<div class="admin-wrap">
+  <h1>Envoyer une notification push</h1>
+  <form id="notify-form">
+    <div class="admin-field">
+      <label for="secret">Mot de passe admin</label>
+      <input type="password" id="secret" required>
+    </div>
+    <div class="admin-field">
+      <label for="title">Titre</label>
+      <input type="text" id="title" placeholder="Nouveau drop 🔥" required>
+    </div>
+    <div class="admin-field">
+      <label for="body">Message</label>
+      <textarea id="body" placeholder="Un nouveau design vient d'arriver, viens jeter un œil !" required></textarea>
+    </div>
+    <div class="admin-field">
+      <label for="url">Lien à ouvrir au clic (optionnel)</label>
+      <input type="text" id="url" placeholder="/collection.html">
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg">Envoyer à tous les abonnés</button>
+  </form>
+  <div id="admin-result" hidden></div>
+</div>
+
+<script>
+  document.getElementById("notify-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const resultEl = document.getElementById("admin-result");
+    resultEl.hidden = true;
+    const payload = {
+      secret: document.getElementById("secret").value,
+      title: document.getElementById("title").value,
+      body: document.getElementById("body").value,
+      url: document.getElementById("url").value || "/"
+    };
+    try {
+      const res = await fetch("/api/send-notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      resultEl.hidden = false;
+      if (res.ok) {
+        resultEl.className = "ok";
+        resultEl.textContent = `Envoyé à ${data.sent} abonné(s) sur ${data.total} (${data.failed} échec(s)).`;
+      } else {
+        resultEl.className = "error";
+        resultEl.textContent = data.error || "Erreur inconnue.";
+      }
+    } catch (err) {
+      resultEl.hidden = false;
+      resultEl.className = "error";
+      resultEl.textContent = "Erreur réseau.";
+    }
+  });
+</script>
+</body>
+</html>

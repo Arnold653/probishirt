@@ -96,6 +96,52 @@ WhatsApp, pas à la place.
    → Déployer, autorise l'accès, copie l'URL fournie
 4. Colle cette URL dans `sheet-config.json`, champ `orderLogUrl`
 
+## Notifications push (nouveaux drops, promos)
+
+Permet de prévenir tes visiteurs d'une nouveauté même si le site est
+fermé, via une petite icône "🔔 Activer" dans le header. Mise en place
+en 4 parties :
+
+### 1. Créer le Sheet des abonnés
+1. Nouveau Google Sheet, onglet nommé exactement `Abonnés`, en-têtes :
+   `endpoint | p256dh | auth | date`
+2. **Extensions → Apps Script**, colle (remplace `TON_ID` par l'ID de
+   ce Sheet, visible dans son URL entre `/d/` et `/edit`) :
+   ```js
+   function doGet(e) {
+     const data = e.parameter;
+     const sheet = SpreadsheetApp.openById("TON_ID").getSheetByName("Abonnés");
+     sheet.appendRow([data.endpoint, data.p256dh, data.auth, data.date]);
+     return ContentService.createTextOutput("OK");
+   }
+   ```
+3. **Déployer → Nouveau déploiement → Application Web**, Exécuter en
+   tant que Moi, Accès : Tout le monde → Déploie, copie l'URL →
+   colle-la dans `sheet-config.json`, champ `pushSaveUrl`
+4. **Publie aussi ce même Sheet en CSV** (Fichier → Partager → Publier
+   sur le web → Valeurs séparées par des virgules) → colle ce lien
+   dans `sheet-config.json`, champ `pushSubscribersCsvUrl`
+
+### 2. Configurer les clés sur Vercel
+Sur [vercel.com](https://vercel.com), ouvre ton projet Probishirt →
+**Settings → Environment Variables**, ajoute :
+
+| Nom | Valeur |
+|---|---|
+| `VAPID_PRIVATE_KEY` | (fournie séparément — ne jamais mettre dans le code) |
+| `ADMIN_SECRET` | Un mot de passe de ton choix, pour protéger l'envoi de notifications |
+
+Après ajout, redéploie le projet (Vercel → Deployments → "..." → Redeploy) pour que ces variables prennent effet.
+
+### 3. Envoyer une notification
+Va sur `https://probishirt.vercel.app/admin-notify.html` (page non
+visible dans les menus, garde ce lien pour toi), entre ton mot de
+passe admin, un titre, un message, et envoie.
+
+### 4. Tester
+Sur le site, clique "🔔 Activer" dans le header et autorise les
+notifications. Envoie-toi un test depuis la page admin.
+
 ## Déployer sur GitHub + Vercel
 
 **1. Créer le dépôt GitHub**
