@@ -679,6 +679,26 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
 .trust-item { display: flex; gap: 14px; align-items: flex-start; }
 .trust-item h4 { font-family: var(--font-display); font-size: 17px; margin: 0 0 4px; font-weight: 600; }
 .trust-item p { margin: 0; font-size: 13.5px; color: var(--muted-invert); }
+
+/* ---------------- Instagram ---------------- */
+.instagram-section { padding: 80px 0 90px; }
+.instagram-iframe {
+  width: 100%;
+  min-height: 420px;
+  border: none;
+}
+.instagram-fallback {
+  display: block;
+  text-align: center;
+  padding: 60px 24px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-l);
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 15px;
+}
+.instagram-fallback:hover { background: var(--paper-2); }
 @media (max-width: 780px) {
   .trust .wrap { grid-template-columns: 1fr; }
 }

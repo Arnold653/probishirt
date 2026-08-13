@@ -14,10 +14,15 @@ const WHATSAPP_NUMBER = "2290199261741";
 // Réseaux sociaux — laisse la valeur vide ("") pour qu'une icône
 // n'apparaisse pas dans le footer si tu n'as pas encore ce compte.
 var SOCIAL_LINKS = {
-  instagram: "",
+  instagram: "https://www.instagram.com/probishirt/",
   facebook: "https://www.facebook.com/profile.php?id=61566377935391",
   tiktok: "https://www.tiktok.com/@probishirt"
 };
+
+// Widget Instagram sur l'accueil (via SnapWidget ou service équivalent).
+// Colle ici l'URL "src" de l'iframe fournie par le service — laisse
+// vide pour afficher un simple bouton "Suivez-nous" à la place.
+var INSTAGRAM_WIDGET_URL = "";
 
 // Tailles proposées par défaut pour tous les produits (modifiable
 // produit par produit avec le champ "sizes").

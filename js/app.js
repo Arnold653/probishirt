@@ -206,6 +206,18 @@ function wireCollectionToolbar() {
   sortSelect.addEventListener("change", apply);
 }
 
+function wireInstagramWidget() {
+  const mount = document.getElementById("instagram-widget-mount");
+  if (!mount) return;
+  if (window.INSTAGRAM_WIDGET_URL) {
+    mount.innerHTML = `<iframe src="${INSTAGRAM_WIDGET_URL}" class="instagram-iframe" frameborder="0" scrolling="no" loading="lazy"></iframe>`;
+  } else {
+    mount.innerHTML = `<a class="instagram-fallback" href="https://www.instagram.com/probishirt/" target="_blank" rel="noopener">
+      Voir nos dernières publications sur Instagram →
+    </a>`;
+  }
+}
+
 function wireGlobalWhatsApp() {
   const generalMsg = "Bonjour Probishirt, j'aimerais en savoir plus sur votre collection.";
   document.querySelectorAll("[data-wa-general]").forEach((a) => {
@@ -250,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
   wireMobileMenu();
   wireSocialLinks();
   wireDeliveryInfo();
+  wireInstagramWidget();
   window.productsReadyPromise.then(() => {
     renderCatalog("catalog-grid");
     renderCatalog("featured-grid", PRODUCTS.slice(0, 3));
