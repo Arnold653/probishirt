@@ -3,5 +3,5 @@
   "promoCsvUrl": "",
   "orderLogUrl": "https://script.google.com/macros/s/AKfycbzgaIVbMfmpVyuSwzHkNf_ATfn1tNm5rglqHAwGse9QM6KmohrRwKtMt3ItDSMy7pdw0Q/exec",
   "pushSaveUrl": "https://script.google.com/macros/s/AKfycbzyORiboJeTTylv3PCxJthsr7cp7hwp52qUHNeFPMAodJ4sKiK1vebPQO6nh-vITDvF/exec",
-  "pushSubscribersCsvUrl": ""
+  "pushSubscribersCsvUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vS6GXrSTZZtgcD54fR5FuOjTbmFgIV1do5YigwGat49wPY3Lga2rLHFTbVZEJc2sPpvdtMetZE6ZTRJ/pub?output=csv"
 }
