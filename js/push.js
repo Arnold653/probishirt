@@ -64,9 +64,28 @@ function wirePushButton() {
   const btn = document.getElementById("push-opt-in");
   if (!btn) return;
 
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
   const supported = "Notification" in window && "serviceWorker" in navigator && "PushManager" in window;
+
+  if (isIos && !isStandalone) {
+    // iPhone : les notifications web ne marchent que si le site est
+    // installé sur l'écran d'accueil (limite imposée par Apple).
+    btn.hidden = false;
+    btn.title = "Sur iPhone : ajoute d'abord Probishirt à ton écran d'accueil (Partager → Sur l'écran d'accueil), puis reviens ici.";
+    btn.addEventListener("click", () => {
+      alert("Sur iPhone, ouvre le menu de partage de Safari puis choisis \"Sur l'écran d'accueil\". Une fois le site ouvert depuis l'icône ajoutée, reviens activer les notifications ici.");
+    });
+    return;
+  }
+
   if (!supported || Notification.permission === "denied") {
-    btn.hidden = true;
+    btn.hidden = false;
+    btn.disabled = true;
+    btn.textContent = "🔕 Indisponible";
+    btn.title = !supported
+      ? "Ton navigateur ne supporte pas les notifications web."
+      : "Les notifications sont bloquées pour ce site. Autorise-les dans les réglages de ton navigateur pour réessayer.";
     return;
   }
   if (Notification.permission === "granted" && localStorage.getItem("probishirt_push_subscribed")) {
