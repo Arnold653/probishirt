@@ -15,7 +15,11 @@ function arrayBufferToBase64(buffer) {
   let binary = "";
   const bytes = new Uint8Array(buffer);
   for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
-  return btoa(binary);
+  // Le protocole Web Push attend du base64url (comme PushSubscription.toJSON()
+  // le fait nativement), pas du base64 standard — sinon le serveur ne peut
+  // pas reconstruire les clés et l'envoi échoue silencieusement pour tout
+  // le monde.
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
 async function subscribeToPush() {
