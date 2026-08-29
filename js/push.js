@@ -89,7 +89,20 @@ function wirePushButton() {
     return;
   }
   if (Notification.permission === "granted" && localStorage.getItem("probishirt_push_subscribed")) {
-    btn.hidden = true;
+    btn.hidden = false;
+    btn.textContent = "🔔 Activé";
+    btn.title = "Déjà activé. Clique pour resynchroniser si besoin.";
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      const original = btn.textContent;
+      btn.textContent = "…";
+      await subscribeToPush();
+      btn.textContent = "🔔 Resynchronisé ✓";
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = original;
+      }, 1500);
+    });
     return;
   }
 
