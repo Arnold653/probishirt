@@ -72,7 +72,7 @@
       resultEl.hidden = false;
       if (res.ok) {
         resultEl.className = "ok";
-        resultEl.textContent = `Envoyé à ${data.sent} abonné(s) sur ${data.total} (${data.failed} échec(s)).`;
+        resultEl.textContent = `Envoyé à ${data.sent} abonné(s) sur ${data.total} (${data.failed} échec(s)). ${data.errors && data.errors.length ? "Détail : " + data.errors.join(" | ") : ""}`;
       } else {
         resultEl.className = "error";
         resultEl.textContent = data.error || "Erreur inconnue.";

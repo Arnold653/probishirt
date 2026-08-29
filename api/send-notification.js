@@ -104,6 +104,9 @@ module.exports = async (req, res) => {
 
   const sent = results.filter((r) => r.status === "fulfilled").length;
   const failed = results.length - sent;
+  const errors = results
+    .filter((r) => r.status === "rejected")
+    .map((r) => (r.reason && r.reason.body) || (r.reason && r.reason.message) || String(r.reason));
 
-  res.status(200).json({ total: subs.length, sent, failed });
+  res.status(200).json({ total: subs.length, sent, failed, errors });
 };
